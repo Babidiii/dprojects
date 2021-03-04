@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
 
-cat emoji-list.txt | dmenu -i -l 20 -p "Emoji :" | cut -d '(' -f 2 | cut -d ')' -f1 | xargs echo -n | xclip -sel clip
+emoji=$(cat emoji-list.txt | dmenu -i -l 20 -p "Emoji :" | cut -d '(' -f 2 | cut -d ')' -f1 | xargs echo -n )
+
+if [[ $emoji == *".."* ]]; then
+  echo "${emoji}" | tr -s '.' | sed 's/\./\n/g' | dmenu -i -l 5 -p "Choose:" | xargs echo -n | xclip -sel clip
+
+else 
+   echo "${emoji}" | xclip -sel clip
+fi
 
