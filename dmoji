@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+cat emoji-list.txt | dmenu -i -l 20 -p "Emoji :" | cut -d '(' -f 2 | cut -d ')' -f1 | xargs echo -n | xclip -sel clip
+
