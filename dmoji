@@ -13,7 +13,9 @@ set -o pipefail  # don't hide errors within pipes
 #]]
 
 
-emoji=$(cat emoji-list.txt | dmenu -i -l 20 -p "Emoji :" | cut -d '(' -f 2 | cut -d ')' -f1 | xargs echo -n )
+link="https://raw.githubusercontent.com/Babidiii/dmoji/master/emoji-list.txt"
+
+emoji=$(curl -s "${link}" | dmenu -i -l 20 -p "Emoji :" | cut -d '(' -f 2 | cut -d ')' -f1 | xargs echo -n )
 
 if [[ $emoji == *".."* ]]; then
   echo "${emoji}" | tr -s '.' | sed 's/\./\n/g' | dmenu -i -l 5 -p "Choose:" | xargs echo -n | xclip -sel clip
