@@ -13,7 +13,7 @@ set -o pipefail  # don't hide errors within pipes
 #]]
 
 
-link="https://raw.githubusercontent.com/Babidiii/dmoji/master/emoji-list.txt"
+link="https://raw.githubusercontent.com/Babidiii/dprojects/master/dmoji/emoji-list.txt"
 
 emoji=$(curl -s "${link}" | dmenu -i -l 20 -p "Emoji :" | cut -d '(' -f 2 | cut -d ')' -f1 | xargs echo -n )
 
