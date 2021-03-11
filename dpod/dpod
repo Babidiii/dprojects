@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# -----------------------------------
+#| bgll.fullstackfullstock.com       |
+#| github.com/babidiii               |
+# -----------------------------------
+
+
+#[[-------------------------------------------------------------------- Settings
+#set -o errexit   # abort on nonzero exitstatus
+set -o nounset   # abort on unbound variable
+set -o pipefail  # don't hide errors within pipes
+#set -o xtrace  # for debug : could use bash -x prog instead
+#]]
+
+cmd=podman
+
+choice=$($cmd image ls | tail -n +2 | dmenu -p 'Choose:' -c)
+id=$(echo $choice | cut -d ' ' -f 3)
+
+res=$(echo -e "No\nYes\n" | dmenu -p "Delete: " -c)
+if [[ $res = "Yes" ]]; then 
+  del=$($cmd rmi $id 2>&1) 
+  if [ $? -eq 0 ]; then
+    notify-send "Podman rmi" "$del"
+  else
+    notify-send -u critical "Podman Error" "$del"
+  fi
+fi
+
+
+
