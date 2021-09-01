@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# -----------------------------------
+#| bgll.fullstackfullstock.com       |
+#| github.com/babidiii               |
+# -----------------------------------
+
+
+#[[-------------------------------------------------------------------- Settings
+set -o errexit   # abort on nonzero exitstatus
+set -o nounset   # abort on unbound variable
+set -o pipefail  # don't hide errors within pipes
+#set -o xtrace  # for debug : could use bash -x prog instead
+#]]
+
+
+primary="eDP-1"
+secondary="HDMI-1-0"
+
+choose-dir(){
+  ext_option=$(dmenu -c -l 10 -i -p "Direction: " << EOF
+above
+left-of
+right-of
+below
+same-as
+EOF
+)
+
+xrandr --output "${primary}" --primary --mode 1920x1080 --output "${secondary}" --mode 1920x1080 "--${ext_option}" "${primary}"
+}
+
+choose-dir
