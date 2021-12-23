@@ -12,21 +12,22 @@ set -o pipefail  # don't hide errors within pipes
 #set -o xtrace  # for debug : could use bash -x prog instead
 #]]
 
+primary="$(xrandr -q | awk '/primary/{print $1}')"
+secondary_choices="$(xrandr -q | awk '/ connected / && $3 != "primary" {printf "%s\n",$1}')"
 
-primary="eDP-1"
-secondary="HDMI-1-0"
-
-choose-dir(){
-  ext_option=$(dmenu -c -l 10 -i -p "Direction: " << EOF
-above
-left-of
-right-of
-below
-same-as
-EOF
-)
-
-xrandr --output "${primary}" --primary --mode 1920x1080 --output "${secondary}" --mode 1920x1080 "--${ext_option}" "${primary}"
+dmenu_disp(){
+  dmenu -i -b -nb "#000000" -nf "#999999" -sb "#000000" -sf "#ff650C" -p "$1"
 }
 
-choose-dir
+main(){
+  if [ $(echo "${secondary_choices}" | wc -l) -gt 1 ]; then 
+    secondary=$(echo "$secondary_choices" | dmenu_disp "[$primary][ ? ]")
+  else
+    secondary="${secondary_choices}"
+  fi
+
+  choice=$(printf "above\nleft-of\nright-of\nbelow\nsame-as" | dmenu_disp "[$primary][$secondary]")
+  xrandr --output "${primary}" --primary --mode 1920x1080 --output "${secondary}" --mode 1920x1080 "--${choice}" "${primary}"
+}
+
+main
